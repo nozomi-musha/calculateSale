@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 class EarningsAggregate {
+	@SuppressWarnings("resource")
 	public static void main (String[] args) {
 
 		// 支店ファイル読み込み
@@ -33,7 +34,6 @@ class EarningsAggregate {
 			//それぞれにitems[]として保持させる
 
 			while ((line = br.readLine()) != null) {
-				System.out.println(line);
 				String str = line;
 				String[] items = str.split(",");
 
@@ -50,15 +50,19 @@ class EarningsAggregate {
 		} catch (FileNotFoundException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
+			System.out.println("支店定義ファイルが見つかりません");
+			return;
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+			System.out.println("支店定義ファイルが見つかりません");
+			return;
 		} finally {
 			if (br != null)
 				try {
 					br.close();
 				} catch (IOException e) {
-					("")
+					System.out.println("予期せぬエラーが発生しました");
+					return;
 				}
 		}
 
@@ -76,12 +80,11 @@ class EarningsAggregate {
 			br1 = new BufferedReader(fr);
 			String line = null;
 
-			while ((line = br.readLine()) != null) {
-				System.out.println(line);
+			while ((line = br1.readLine()) != null) {
 				String str = line;
 				String[] items = str.split(",");
 
-			//ファイルフォーマットの指定
+				//ファイルフォーマットの指定
 
 				String str1 = items[0];
 
@@ -91,20 +94,29 @@ class EarningsAggregate {
 
 				} else {
 					System.out.println("商品店定義ファイルのフォーマットが不正です");
-					return;
 				}
 			}
+		} catch (FileNotFoundException e) {
+			// TODO 自動生成された catch ブロック
+			System.out.println("商品定義ファイルが見つかりません");
+			return;
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			System.out.println("商品定義ファイルが見つかりません");
+			return;
 		} finally {
-			if (br != null)
+			if (br1 != null)
 				try {
-					br.close();
+					br1.close();
 				} catch (IOException e) {
-					System.out.println("商品定義ファイルが見つかりませんでした");
+					System.out.println("予期せぬエラーが発生しました");
+					return;
 				}
 		}
 
 
 		//店舗別集計
+		BufferedReader br4 = null;
 
 		try {
 
@@ -141,21 +153,23 @@ class EarningsAggregate {
 				}
 			}
 
-		//ArrayLst内のString型ファイルをそれぞれ一行ずつ読み込む
+			//ArrayLst内のString型ファイルをそれぞれ一行ずつ読み込む
+
+
 
 			for (int i = 0 ; i  < earningsFile.size(); i++) {
 				ArrayList<String> rcdLine = new ArrayList<String>();
 				File file = new File(args[0],earningsFile.get(i));
 				FileReader fr = new FileReader(file);
-				BufferedReader br2 = new BufferedReader(fr);
+				br4 = new BufferedReader(fr);
 
-				String line ;
+				String line = null;
 
-				while ((line = br.readLine()) != null) {
+				while ((line = br4.readLine()) != null) {
 					rcdLine.add(line);
 				}
 
-		//rcdファイルの要素数が3であるか
+				//rcdファイルの要素数が3であるか
 
 				if (rcdLine.size() == 3) {
 				} else {
@@ -168,7 +182,7 @@ class EarningsAggregate {
 					return;
 				}
 
-		//ファイルの支店コードが正しいか(コンテンツキー)
+				//ファイルの支店コードが正しいか(コンテンツキー)
 				if (!shopmap.containsKey(rcdLine.get(0))) {
 					System.out.println(earningsFile.get(i) + "の支店コードが不正です");
 					return;
@@ -185,10 +199,22 @@ class EarningsAggregate {
 				shopTotalmap.put(rcdLine.get(0), ln3);
 			}
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("エラー");
+		} catch (FileNotFoundException e) {
+			// TODO 自動生成された catch ブロック;
+			System.out.println("予期せぬエラーが発生しました");
 			return;
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			System.out.println("予期せぬエラーが発生しました");
+			return;
+		} finally {
+			if (br4 != null)
+				try {
+					br4.close();
+				} catch (IOException e) {
+					System.out.println("予期せぬエラーが発生しました");
+					return;
+				}
 		}
 
 		//shopTotalmapのvalueを降順に
@@ -207,23 +233,34 @@ class EarningsAggregate {
 
 
 		//店舗別集計出力
-
+		BufferedWriter bw3 = null;
 		try {
 			File file = new File(args[0],"branch.out");
 			FileWriter fw = new FileWriter(file);
-			BufferedWriter bw = new BufferedWriter(fw);
+			bw3 = new BufferedWriter(fw);
 
 			for (Entry<String, Long> entry : list_entries) {
-				bw.write(entry.getKey() + " , " + shopmap.get(entry.getKey()) + " , " + entry.getValue() + "\n");
+				bw3.write(entry.getKey() + " , " + shopmap.get(entry.getKey()) + " , " + entry.getValue() + "\n");
 			}
-			bw.close();
-		} catch (IOException e)  {
+		} catch (FileNotFoundException e){
 			System.out.println("予期せぬエラーが発生しました");
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+
+			System.out.println("予期せぬエラーが発生しました");
+			return;
+		} finally {
+			if (bw3 != null)
+				try {
+					bw3.close();
+				} catch (IOException e) {
+					System.out.print("予期せぬエラーが発生しました");
+					return;
+				}
 		}
 
-
 		//商品別集計
-
+		BufferedReader br5 = null;
 		try {
 
 			File dir2 = new File(args[0]);
@@ -239,31 +276,39 @@ class EarningsAggregate {
 				}
 			}
 
-		//ArrayLst内のString型ファイルをそれぞれ一行ずつ読み込む
+			//ArrayLst内のString型ファイルをそれぞれ一行ずつ読み込む
 
 			for (int i = 0 ; i  < earningsFile2.size(); i++) {
 				ArrayList<String> rcdLine2 = new ArrayList<String>();
 				File file2 = new File(args[0],earningsFile2.get(i));
 				FileReader fr2 = new FileReader(file2);
-				BufferedReader br2 = new BufferedReader(fr2);
+				br5 = new BufferedReader(fr2);
 
 				String line2 ;
 
-				while ((line2 = br2.readLine()) != null) {
+				while ((line2 = br5.readLine()) != null) {
 					rcdLine2.add(line2);
 				}
 
 				long ln4 = Long.parseLong(rcdLine2.get(2));
 				long ln5 = menuTotalmap.get(rcdLine2.get(1)) + ln4;
 				menuTotalmap.put(rcdLine2.get(1), ln5);
-
-				br2.close();
-				}
-			} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("エラー");
+			}
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			System.out.println("予期せぬエラーが発生しました");
 			return;
+		} finally {
+			if (br5 != null)
+				try {
+					br5.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					System.out.println("予期せぬエラーが発生しました");
+					return;
+				}
 		}
+
 
 		//menuTotalmapのvalueを降順に
 
@@ -281,19 +326,27 @@ class EarningsAggregate {
 
 		//商品別集計出力
 
+		BufferedWriter bw6 = null;
 		try {
 			File file = new File(args[0],"commodity.out");
 			FileWriter fw = new FileWriter(file);
-			BufferedWriter bw = new BufferedWriter(fw);
+			bw6 = new BufferedWriter(fw);
 
 			for (Entry<String, Long> entry : list_entries2) {
-				bw.write(entry.getKey() + " , " + menumap.get(entry.getKey()) + " , " + entry.getValue() + "\n");
+				bw6.write(entry.getKey() + " , " + menumap.get(entry.getKey()) + " , " + entry.getValue() + "\n");
 			}
-			bw.close();
-		} catch (IOException e)  {
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
 			System.out.println("予期せぬエラーが発生しました");
-
+			return;
+		} finally {
+			if (bw6 != null)
+				try {
+					bw6.close();
+				} catch (IOException e) {
+					System.out.println("予期せぬエラーが発生しました");
+					return;
+				}
 		}
-
 	}
 }

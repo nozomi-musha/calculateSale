@@ -18,6 +18,8 @@ class EarningsAggregate {
 	@SuppressWarnings("resource")
 	public static void main (String[] args) {
 
+		  fileReadmtd();
+
 		// 支店ファイル読み込み
 
 		if (args.length != 1){
@@ -30,12 +32,10 @@ class EarningsAggregate {
 		BufferedReader br = null;
 
 		try {
-
 				 File file = new File(args[0],"branch.lst");
 				FileReader fr = new FileReader(file);
 				br = new BufferedReader(fr);
 				String line = null;
-
 
 		//ファイルの中身を書き出し、,で区切り それぞれにitems[]として保持させる
 
@@ -153,7 +153,7 @@ class EarningsAggregate {
 
 			for (int k = 0; k < splitNumber.size() - 1; k++) {
 				if (splitNumber.get(k + 1) - splitNumber.get(k) != 1) {
-					System.out.println("売上ファイルが連番になっていません");
+					System.out.println("売上ファイル名が連番になっていません");
 					return;
 				}
 			}
@@ -179,12 +179,6 @@ class EarningsAggregate {
 					System.out.println(earningsFile.get(i) + "のフォーマットが不正です");
 					return;
 				}
-		//rcdLineの(2)が10桁をこえていないか
-
-				if (!rcdLine.get(2).matches("\\d{1,9}")) {
-					System.out.println(earningsFile.get(i) + "の合計金額が10桁を超えています");
-					return;
-				}
 
 		//ファイルの支店コードが正しいか(コンテンツキー)
 
@@ -199,9 +193,23 @@ class EarningsAggregate {
 					System.out.println(earningsFile.get(i)  + "の商品コードが不正です");
 					return;
 				}
+		//rcdLineの(2)数字のみであるか
+
+				if (!rcdLine.get(2).matches("^[0-9]*$")) {
+					System.out.println("予期せぬエラーが発生しました");
+					return;
+				}
 
 				long ln2 = Long.parseLong(rcdLine.get(2));
 				long ln3 = shopTotalmap.get(rcdLine.get(0)) + ln2;
+
+		//rcdLineの(2)が10桁をこえていないか
+				String a = String.valueOf(ln3);
+
+				if (!a.matches("\\d{1,9}")) {
+					System.out.println("合計金額が10桁を超えています");
+					return;
+				}
 				shopTotalmap.put(rcdLine.get(0), ln3);
 			}
 
@@ -359,6 +367,11 @@ class EarningsAggregate {
 					return;
 				}
 		}
+	}
+
+	private static void fileReadmtd() {
+		// TODO 自動生成されたメソッド・スタブ
+
 	}
 
 	private static void printThreeValues() {

@@ -18,7 +18,7 @@ class EarningsAggregate {
 	@SuppressWarnings("resource")
 	public static void main (String[] args) {
 
-		  fileReadmtd();
+		fileReadmtd();
 
 		// 支店ファイル読み込み
 
@@ -30,25 +30,26 @@ class EarningsAggregate {
 		HashMap<String ,String> shopmap = new HashMap<String,String> ();
 		HashMap<String,Long> shopTotalmap = new HashMap<String,Long> ();
 
-
-//	public static boolean fileReadmtd()
-
 		BufferedReader br = null;
 
 		try {
-				 File file = new File(args[0],"branch.lst");
-				FileReader fr = new FileReader(file);
-				br = new BufferedReader(fr);
-					String line = null;
 
-		//ファイルの中身を書き出し、,で区切り それぞれにitems[]として保持させる
+			//			public static boolean (String a,) {
+			//				int brunch = a
+
+			File file = new File(args[0],"branch.lst");
+			FileReader fr = new FileReader(file);
+			br = new BufferedReader(fr);
+			String line = null;
+
+			//ファイルの中身を書き出し、,で区切り それぞれにitems[]として保持させる
 
 			while ((line = br.readLine()) != null) {
 				String str = line;
 				String[] items = str.split(",");
 
 
-		//ファイルフォーマットの指定
+				//ファイルフォーマットの指定
 
 				if (items[0].matches("\\d{3}") && items.length == 2)  {
 					shopmap.put (items[0],items[1]);
@@ -93,7 +94,7 @@ class EarningsAggregate {
 				String str = line;
 				String[] items = str.split(",");
 
-		//ファイルフォーマットの指定
+				//ファイルフォーマットの指定
 
 				String str1 = items[0];
 
@@ -144,7 +145,7 @@ class EarningsAggregate {
 
 			}
 
-		//読み込んだrcdファイルの中で、歯抜け、連番でないものは除外する
+			//読み込んだrcdファイルの中で、歯抜け、連番でないものは除外する
 
 			ArrayList<Integer> splitNumber = new ArrayList<Integer>();
 			for (int j = 0; j < earningsFile.size(); j++) {
@@ -161,7 +162,7 @@ class EarningsAggregate {
 				}
 			}
 
-		//ArrayLst内のString型ファイルをそれぞれ一行ずつ読み込む
+			//ArrayLst内のString型ファイルをそれぞれ一行ずつ読み込む
 
 			for (int i = 0 ; i  < earningsFile.size(); i++) {
 				ArrayList<String> rcdLine = new ArrayList<String>();
@@ -175,7 +176,7 @@ class EarningsAggregate {
 					rcdLine.add(line);
 				}
 
-		//rcdファイルの要素数が3であるか
+				//rcdファイルの要素数が3であるか
 
 				if (rcdLine.size() == 3) {
 				} else {
@@ -183,20 +184,20 @@ class EarningsAggregate {
 					return;
 				}
 
-		//ファイルの支店コードが正しいか(コンテンツキー)
+				//ファイルの支店コードが正しいか(コンテンツキー)
 
 				if (!shopmap.containsKey(rcdLine.get(0))) {
 					System.out.println(earningsFile.get(i) + "の支店コードが不正です");
 					return;
 				}
 
-		//ファイルの商品コードが正しいか(コンテンツキー)
+				//ファイルの商品コードが正しいか(コンテンツキー)
 
 				if (!menumap.containsKey(rcdLine.get(1))) {
 					System.out.println(earningsFile.get(i)  + "の商品コードが不正です");
 					return;
 				}
-		//rcdLineの(2)数字のみであるか
+				//rcdLineの(2)数字のみであるか
 
 				if (!rcdLine.get(2).matches("^[0-9]*$")) {
 					System.out.println("予期せぬエラーが発生しました");
@@ -206,14 +207,25 @@ class EarningsAggregate {
 				long ln2 = Long.parseLong(rcdLine.get(2));
 				long ln3 = shopTotalmap.get(rcdLine.get(0)) + ln2;
 
-		//rcdLineの(2)が10桁をこえていないか
+				//rcdLineの(2)が10桁をこえていないか
 				String a = String.valueOf(ln3);
 
 				if (!a.matches("\\d{1,10}")) {
-					System.out.println("合計金額が10桁を超えています");
+					System.out.println("合計金額が10桁を超えました");
 					return;
 				}
 				shopTotalmap.put(rcdLine.get(0), ln3);
+
+				long ln4 = Long.parseLong(rcdLine.get(2));
+				long ln5 = menuTotalmap.get(rcdLine.get(1)) + ln4;
+
+				if (!a.matches("\\d{1,10}")) {
+					System.out.println("合計金額が10桁を超えました");
+					return;
+				}
+				menuTotalmap.put(rcdLine.get(1), ln5);
+
+
 			}
 
 		} catch (FileNotFoundException e) {
@@ -274,61 +286,6 @@ class EarningsAggregate {
 					bw3.close();
 				} catch (IOException e) {
 					System.out.print("予期せぬエラーが発生しました");
-					return;
-				}
-		}
-
-		//商品別集計
-
-		BufferedReader br5 = null;
-
-		try {
-
-			File dir2 = new File(args[0]);
-			File[] files2 = dir2.listFiles();
-			ArrayList<String> earningsFile2 = new ArrayList<String>();
-
-			for (int i = 0; i < files2.length; i++) {
-				File file = files2[i];
-				String filename = file.getName();
-
-				if (filename.matches("\\d{8}.rcd")) {
-					earningsFile2.add(filename);
-				}
-			}
-
-		//ArrayLst内のString型ファイルをそれぞれ一行ずつ読み込む
-
-			for (int i = 0 ; i  < earningsFile2.size(); i++) {
-				ArrayList<String> rcdLine2 = new ArrayList<String>();
-				File file2 = new File(args[0],earningsFile2.get(i));
-				FileReader fr2 = new FileReader(file2);
-				br5 = new BufferedReader(fr2);
-
-				String line2 ;
-
-				while ((line2 = br5.readLine()) != null) {
-					rcdLine2.add(line2);
-				}
-
-				long ln4 = Long.parseLong(rcdLine2.get(2));
-				long ln5 = menuTotalmap.get(rcdLine2.get(1)) + ln4;
-				menuTotalmap.put(rcdLine2.get(1), ln5);
-			}
-		} catch (FileNotFoundException e){
-			System.out.println("予期せぬエラーが発生しました");
-			return;
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			System.out.println("予期せぬエラーが発生しました");
-			return;
-		} finally {
-			if (br5 != null)
-				try {
-					br5.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-					System.out.println("予期せぬエラーが発生しました");
 					return;
 				}
 		}

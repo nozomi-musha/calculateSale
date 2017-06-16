@@ -32,14 +32,18 @@ class EarningsAggregate {
 			return;
 		}
 
+
+
 		//商品定義ファイル読み込み
 
 		HashMap<String,String> menumap = new HashMap<String,String> ();
 		HashMap<String,Long> menuTotalmap = new HashMap<String,Long> ();
 
-		if (!fileReadmtd(args[0],"commodity.lst", "^[0-9 A-Z]{8}$", "商品", menumap,menuTotalmap)) {
+		if (!fileReadmtd(args[0],"commodity.lst", "^[0-9a-zA-Z]{8}$", "商品", menumap,menuTotalmap)) {
 			return;
 		}
+
+
 
 		//店舗別集計
 
@@ -61,6 +65,8 @@ class EarningsAggregate {
 
 			}
 
+
+
 			//読み込んだrcdファイルの中で、歯抜け、連番でないものは除外する
 
 			ArrayList<Integer> splitNumber = new ArrayList<Integer>();
@@ -78,6 +84,7 @@ class EarningsAggregate {
 				}
 			}
 
+
 			//ArrayLst内のString型ファイルをそれぞれ一行ずつ読み込む
 
 			for (int i = 0 ; i  < earningsFile.size(); i++) {
@@ -92,6 +99,7 @@ class EarningsAggregate {
 					rcdLine.add(line);
 				}
 
+
 				//rcdファイルの要素数が3であるか
 
 				if (rcdLine.size() == 3) {
@@ -100,12 +108,14 @@ class EarningsAggregate {
 					return;
 				}
 
+
 				//ファイルの支店コードが正しいか(コンテンツキー)
 
 				if (!shopmap.containsKey(rcdLine.get(0))) {
 					System.out.println(earningsFile.get(i) + "の支店コードが不正です");
 					return;
 				}
+
 
 				//ファイルの商品コードが正しいか(コンテンツキー)
 
@@ -124,6 +134,7 @@ class EarningsAggregate {
 				long ln2 = Long.parseLong(rcdLine.get(2));
 				long ln3 = shopTotalmap.get(rcdLine.get(0)) + ln2;
 
+
 				//支店別の合計金額が10桁をこえていないか
 
 				String a = String.valueOf(ln3);
@@ -133,6 +144,7 @@ class EarningsAggregate {
 					return;
 				}
 				shopTotalmap.put(rcdLine.get(0), ln3);
+
 
 				//商品別の合計が10桁を超えていないか
 
@@ -167,12 +179,15 @@ class EarningsAggregate {
 				}
 		}
 
+
+
 		//店舗別集計出力
 
 		if(!fileWritemtd(args[0], "branch.out", shopTotalmap, shopmap)) {
 			System.out.println("予期せぬエラーが発生しました");
 			return;
 		}
+
 
 		//商品別集計出力
 
@@ -181,6 +196,7 @@ class EarningsAggregate {
 			return;
 		}
 	}
+
 
 	//ファイル出力メソッド
 
@@ -199,8 +215,12 @@ class EarningsAggregate {
 			}
 		});
 
+
+
 		BufferedWriter bw3 = null;
+
 		try {
+
 			File file = new File(dir,fileName);
 			FileWriter fw = new FileWriter(file);
 			bw3 = new BufferedWriter(fw);
@@ -221,7 +241,9 @@ class EarningsAggregate {
 
 		} finally {
 			try {
-				bw3.close();
+				if (bw3 != null) {
+					bw3.close();
+				}
 			} catch (IOException e) {
 				System.out.print("予期せぬエラーが発生しました");
 				return false;
@@ -245,11 +267,13 @@ class EarningsAggregate {
 			br = new BufferedReader(fr);
 			String line = null;
 
+
 			//ファイルの中身を書き出し、,で区切り それぞれにitems[]として保持させる
 
 			while ((line = br.readLine()) != null) {
 				String str = line;
 				String[] items = str.split(",");
+
 
 				//ファイルフォーマットの指定
 
@@ -275,7 +299,7 @@ class EarningsAggregate {
 		} finally {
 				try {
 					if (br != null) {
-					br.close();
+						br.close();
 					}
 				} catch (IOException e) {
 					System.out.println("予期せぬエラーが発生しました");

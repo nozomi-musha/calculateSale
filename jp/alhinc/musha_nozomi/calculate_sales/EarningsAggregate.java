@@ -197,6 +197,7 @@ class EarningsAggregate {
 					System.out.println(earningsFile.get(i)  + "の商品コードが不正です");
 					return;
 				}
+
 				//rcdLineの(2)数字のみであるか
 
 				if (!rcdLine.get(2).matches("^[0-9]*$")) {
@@ -207,7 +208,8 @@ class EarningsAggregate {
 				long ln2 = Long.parseLong(rcdLine.get(2));
 				long ln3 = shopTotalmap.get(rcdLine.get(0)) + ln2;
 
-				//rcdLineの(2)が10桁をこえていないか
+				//支店別の合計金額が10桁をこえていないか
+
 				String a = String.valueOf(ln3);
 
 				if (!a.matches("\\d{1,10}")) {
@@ -216,14 +218,16 @@ class EarningsAggregate {
 				}
 				shopTotalmap.put(rcdLine.get(0), ln3);
 
-				long ln4 = Long.parseLong(rcdLine.get(2));
-				long ln5 = menuTotalmap.get(rcdLine.get(1)) + ln4;
+				//商品別の合計が10桁を超えていないか
 
-				if (!a.matches("\\d{1,10}")) {
+				long ln4 = menuTotalmap.get(rcdLine.get(1)) + ln2;
+				String b = String.valueOf(ln4);
+
+				if (!b.matches("\\d{1,10}")) {
 					System.out.println("合計金額が10桁を超えました");
 					return;
 				}
-				menuTotalmap.put(rcdLine.get(1), ln5);
+				menuTotalmap.put(rcdLine.get(1), ln4);
 
 
 			}
@@ -313,7 +317,8 @@ class EarningsAggregate {
 			bw6 = new BufferedWriter(fw);
 
 			for (Entry<String, Long> entry : list_entries2) {
-				bw6.write(entry.getKey() + " , " + menumap.get(entry.getKey()) + " , " + entry.getValue() + "\n");
+				bw6.write(entry.getKey() + " , " + menumap.get(entry.getKey()) + " , " + entry.getValue());
+				bw6.newLine();
 			}
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック

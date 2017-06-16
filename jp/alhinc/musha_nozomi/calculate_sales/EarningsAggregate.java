@@ -30,12 +30,9 @@ class EarningsAggregate {
 
 		boolean judge = fileReadmtd(args[0],"branch.lst", "\\d{3}", "支店", shopmap,shopTotalmap);
 
-		if (fileReadmtd(args[0],"branch.lst", "\\d{3}", "支店", shopmap,shopTotalmap)) {
-
-		} else {
+		if (!fileReadmtd(args[0],"branch.lst", "\\d{3}", "支店", shopmap,shopTotalmap)) {
 			System.out.println("予期せぬエラーが発生しました");
 			return;
-
 		}
 
 		//商品定義ファイル読み込み
@@ -43,10 +40,7 @@ class EarningsAggregate {
 		HashMap<String,String> menumap = new HashMap<String,String> ();
 		HashMap<String,Long> menuTotalmap = new HashMap<String,Long> ();
 
-		boolean judge1 = fileReadmtd(args[0],"commodity.lst", "^[0-9 A-Z]{8}$", "商品", menumap,menuTotalmap);
-
-		if (fileReadmtd(args[0],"commodity.lst", "^[0-9 A-Z]{8}$", "商品", menumap,menuTotalmap)) {
-		} else {
+		if (!fileReadmtd(args[0],"commodity.lst", "^[0-9 A-Z]{8}$", "商品", menumap,menuTotalmap)) {
 			System.out.println("予期せぬエラーが発生しました");
 			return;
 		}
@@ -177,11 +171,17 @@ class EarningsAggregate {
 
 		//店舗別集計出力
 
-		fileWritemtd(args[0], "branch.out", shopTotalmap, shopmap);
+		if(!fileWritemtd(args[0], "branch.out", shopTotalmap, shopmap)) {
+			System.out.println("予期せぬエラーが発生しました");
+			return;
+		}
 
 		//商品別集計出力
 
-		fileWritemtd(args[0], "commodity.out", menuTotalmap, menumap);
+		if(!fileWritemtd(args[0], "commodity.out", menuTotalmap, menumap)) {
+			System.out.println("予期せぬエラーが発生しました");
+			return;
+		}
 	}
 
 	//ファイル出力メソッド

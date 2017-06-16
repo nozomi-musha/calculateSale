@@ -184,6 +184,7 @@ class EarningsAggregate {
 
 	public static boolean fileWritemtd(String dir, String fileName, HashMap<String,Long> totalMap, HashMap<String ,String> nameMap) {
 
+
 		List<Entry<String, Long>>
 		list_entries = new ArrayList<Entry<String, Long>>(totalMap.entrySet());
 		Collections.sort(list_entries, new Comparator<Entry<String, Long>>()
@@ -196,7 +197,7 @@ class EarningsAggregate {
 
 		BufferedWriter bw3 = null;
 		try {
-			File file = new File(dir,"fileNamet");
+			File file = new File(dir,fileName);
 			FileWriter fw = new FileWriter(file);
 			bw3 = new BufferedWriter(fw);
 

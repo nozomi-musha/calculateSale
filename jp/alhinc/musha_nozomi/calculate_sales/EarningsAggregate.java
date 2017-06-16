@@ -254,18 +254,18 @@ class EarningsAggregate {
 					mapName.put (items[0],items[1]);
 					totalMapname.put (items[0],(long) 0);
 				} else {
-					System.out.println("printName定義ファイルのフォーマットが不正です");
+					System.out.println(printName +  "定義ファイルのフォーマットが不正です");
 					return false;
 				}
 			}
 		} catch (FileNotFoundException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
-			System.out.println("printName定義ファイルが存在しません");
+			System.out.println(printName + "定義ファイルが存在しません");
 			return false;
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
-			System.out.println("printName支店定義ファイルが存在しません");
+			System.out.println(printName + "支店定義ファイルが存在しません");
 			return false;
 		} finally {
 			if (br != null)

@@ -29,7 +29,6 @@ class EarningsAggregate {
 		HashMap<String,Long> shopTotalmap = new HashMap<String,Long> ();
 
 		if (!fileReadmtd(args[0],"branch.lst", "\\d{3}", "支店", shopmap,shopTotalmap)) {
-			System.out.println("予期せぬエラーが発生しました");
 			return;
 		}
 
@@ -39,7 +38,6 @@ class EarningsAggregate {
 		HashMap<String,Long> menuTotalmap = new HashMap<String,Long> ();
 
 		if (!fileReadmtd(args[0],"commodity.lst", "^[0-9 A-Z]{8}$", "商品", menumap,menuTotalmap)) {
-			System.out.println("予期せぬエラーが発生しました");
 			return;
 		}
 

@@ -30,10 +30,10 @@ class EarningsAggregate {
 
 		boolean judge = fileReadmtd(args[0],"branch.lst", "\\d{3}", "支店", shopmap,shopTotalmap);
 
-		if (!fileReadmtd(args[0],"branch.lst", "\\d{3}", "支店", shopmap,shopTotalmap)) {
+		if (fileReadmtd(args[0],"branch.lst", "\\d{3}", "支店", shopmap,shopTotalmap)) {
 
 		} else {
-			System.out.println("予期せぬエラーが発生しました");
+			System.out.println("予期せぬエラーが発生しましたa");
 			return;
 
 		}
@@ -45,7 +45,7 @@ class EarningsAggregate {
 
 		boolean judge1 = fileReadmtd(args[0],"commodity.lst", "^[0-9 A-Z]{8}$", "商品", menumap,menuTotalmap);
 
-		if (!fileReadmtd(args[0],"commodity.lst", "^[0-9 A-Z]{8}$", "商品", menumap,menuTotalmap)) {
+		if (fileReadmtd(args[0],"commodity.lst", "^[0-9 A-Z]{8}$", "商品", menumap,menuTotalmap)) {
 		} else {
 			System.out.println("予期せぬエラーが発生しました");
 			return;
@@ -154,8 +154,6 @@ class EarningsAggregate {
 					return;
 				}
 				menuTotalmap.put(rcdLine.get(1), ln4);
-
-
 			}
 
 		} catch (FileNotFoundException e) {
@@ -177,7 +175,6 @@ class EarningsAggregate {
 				}
 		}
 
-
 		//店舗別集計出力
 
 		fileWritemtd(args[0], "branch.out", shopTotalmap, shopmap);
@@ -186,8 +183,6 @@ class EarningsAggregate {
 
 		fileWritemtd(args[0], "commodity.out", menuTotalmap, menumap);
 	}
-
-
 
 	//ファイル出力メソッド
 
@@ -229,9 +224,7 @@ class EarningsAggregate {
 					return false;
 				}
 		}
-
 		return true;
-
 	}
 
 	public static boolean fileReadmtd(String dir, String fileName, String matchNumber, String printName,

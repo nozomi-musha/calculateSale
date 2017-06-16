@@ -29,13 +29,17 @@ class EarningsAggregate {
 
 		HashMap<String ,String> shopmap = new HashMap<String,String> ();
 		HashMap<String,Long> shopTotalmap = new HashMap<String,Long> ();
+
+
+//	public static boolean fileReadmtd()
+
 		BufferedReader br = null;
 
 		try {
 				 File file = new File(args[0],"branch.lst");
 				FileReader fr = new FileReader(file);
 				br = new BufferedReader(fr);
-				String line = null;
+					String line = null;
 
 		//ファイルの中身を書き出し、,で区切り それぞれにitems[]として保持させる
 
@@ -43,9 +47,10 @@ class EarningsAggregate {
 				String str = line;
 				String[] items = str.split(",");
 
+
 		//ファイルフォーマットの指定
 
-				if (items[0].matches("\\d{3}") && items.length == 2) {
+				if (items[0].matches("\\d{3}") && items.length == 2)  {
 					shopmap.put (items[0],items[1]);
 					shopTotalmap.put (items[0],(long) 0);
 				} else {
@@ -133,7 +138,7 @@ class EarningsAggregate {
 				File file = files[i];
 				String filename = file.getName();
 
-				if (filename.matches("\\d{8}.rcd")) {
+				if (filename.matches("\\d{8}.rcd") && files[i].isFile()) {
 					earningsFile.add(filename);
 				}
 
@@ -145,10 +150,8 @@ class EarningsAggregate {
 			for (int j = 0; j < earningsFile.size(); j++) {
 				String rcdSplit = earningsFile.get(j);
 				String[] splitItem = rcdSplit.split("\\.");
-				String splitItem1 = splitItem[0];
-				int splitNumber1 = Integer.parseInt(splitItem1);
-
-				splitNumber.add(splitNumber1);
+				Integer splitItem1 = Integer.parseInt(splitItem[0]);
+				splitNumber.add(splitItem1);
 			}
 
 			for (int k = 0; k < splitNumber.size() - 1; k++) {
@@ -206,7 +209,7 @@ class EarningsAggregate {
 		//rcdLineの(2)が10桁をこえていないか
 				String a = String.valueOf(ln3);
 
-				if (!a.matches("\\d{1,9}")) {
+				if (!a.matches("\\d{1,10}")) {
 					System.out.println("合計金額が10桁を超えています");
 					return;
 				}
@@ -255,7 +258,8 @@ class EarningsAggregate {
 			bw3 = new BufferedWriter(fw);
 
 			for (Entry<String, Long> entry : list_entries) {
-				bw3.write(entry.getKey() + " , " + shopmap.get(entry.getKey()) + " , " + entry.getValue() + "\n");
+				bw3.write(entry.getKey() + " , " + shopmap.get(entry.getKey()) + " , " + entry.getValue());
+				bw3.newLine();
 			}
 		} catch (FileNotFoundException e){
 			System.out.println("予期せぬエラーが発生しました");

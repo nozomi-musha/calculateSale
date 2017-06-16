@@ -212,13 +212,12 @@ class EarningsAggregate {
 			System.out.println("予期せぬエラーが発生しました");
 			return false;
 		} finally {
-			if (bw3 != null)
-				try {
-					bw3.close();
-				} catch (IOException e) {
-					System.out.print("予期せぬエラーが発生しました");
-					return false;
-				}
+			try {
+				bw3.close();
+			} catch (IOException e) {
+				System.out.print("予期せぬエラーが発生しました");
+				return false;
+			}
 		}
 		return true;
 	}
@@ -258,7 +257,6 @@ class EarningsAggregate {
 			}
 		} catch (FileNotFoundException e) {
 			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
 			System.out.println(printName + "定義ファイルが存在しません");
 			return false;
 		} catch (IOException e) {

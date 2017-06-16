@@ -33,7 +33,7 @@ class EarningsAggregate {
 		if (fileReadmtd(args[0],"branch.lst", "\\d{3}", "支店", shopmap,shopTotalmap)) {
 
 		} else {
-			System.out.println("予期せぬエラーが発生しましたa");
+			System.out.println("予期せぬエラーが発生しました");
 			return;
 
 		}

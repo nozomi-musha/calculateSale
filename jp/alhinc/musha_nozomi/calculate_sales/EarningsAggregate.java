@@ -28,8 +28,6 @@ class EarningsAggregate {
 		HashMap<String ,String> shopmap = new HashMap<String,String> ();
 		HashMap<String,Long> shopTotalmap = new HashMap<String,Long> ();
 
-		boolean judge = fileReadmtd(args[0],"branch.lst", "\\d{3}", "支店", shopmap,shopTotalmap);
-
 		if (!fileReadmtd(args[0],"branch.lst", "\\d{3}", "支店", shopmap,shopTotalmap)) {
 			System.out.println("予期せぬエラーが発生しました");
 			return;

@@ -18,8 +18,6 @@ class EarningsAggregate {
 	@SuppressWarnings("resource")
 	public static void main (String[] args) {
 
-		fileReadmtd();
-
 		// 支店ファイル読み込み
 
 		if (args.length != 1){
@@ -30,99 +28,27 @@ class EarningsAggregate {
 		HashMap<String ,String> shopmap = new HashMap<String,String> ();
 		HashMap<String,Long> shopTotalmap = new HashMap<String,Long> ();
 
-		BufferedReader br = null;
+		boolean judge = fileReadmtd(args[0],"branch.lst", "\\d{3}", "支店", shopmap,shopTotalmap);
 
-		try {
+		if (!fileReadmtd(args[0],"branch.lst", "\\d{3}", "支店", shopmap,shopTotalmap)) {
 
-			//			public static boolean (String a,) {
-			//				int brunch = a
-
-			File file = new File(args[0],"branch.lst");
-			FileReader fr = new FileReader(file);
-			br = new BufferedReader(fr);
-			String line = null;
-
-			//ファイルの中身を書き出し、,で区切り それぞれにitems[]として保持させる
-
-			while ((line = br.readLine()) != null) {
-				String str = line;
-				String[] items = str.split(",");
-
-
-				//ファイルフォーマットの指定
-
-				if (items[0].matches("\\d{3}") && items.length == 2)  {
-					shopmap.put (items[0],items[1]);
-					shopTotalmap.put (items[0],(long) 0);
-				} else {
-					System.out.println("支店定義ファイルのフォーマットが不正です");
-					return;
-				}
-			}
-		} catch (FileNotFoundException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-			System.out.println("支店定義ファイルが存在しません");
+		} else {
+			System.out.println("予期せぬエラーが発生しました");
 			return;
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			System.out.println("支店定義ファイルが存在しません");
-			return;
-		} finally {
-			if (br != null)
-				try {
-					br.close();
-				} catch (IOException e) {
-					System.out.println("予期せぬエラーが発生しました");
-					return;
-				}
+
 		}
 
 		//商品定義ファイル読み込み
 
 		HashMap<String,String> menumap = new HashMap<String,String> ();
 		HashMap<String,Long> menuTotalmap = new HashMap<String,Long> ();
-		BufferedReader br1 = null;
 
-		try {
-			File file = new File(args[0],"commodity.lst");
-			FileReader fr = new FileReader(file);
-			br1 = new BufferedReader(fr);
-			String line = null;
+		boolean judge1 = fileReadmtd(args[0],"commodity.lst", "^[0-9 A-Z]{8}$", "商品", menumap,menuTotalmap);
 
-			while ((line = br1.readLine()) != null) {
-				String str = line;
-				String[] items = str.split(",");
-
-				//ファイルフォーマットの指定
-
-				String str1 = items[0];
-
-				if (str1.matches("^[0-9 A-Z]{8}$") && items.length == 2)  {
-					menumap.put (items[0],items[1]);
-					menuTotalmap.put (items[0],(long) 0);
-
-				} else {
-					System.out.println("商品定義ファイルのフォーマットが不正です");
-					return;
-				}
-			}
-		} catch (FileNotFoundException e) {
-			// TODO 自動生成された catch ブロック
-			System.out.println("商品定義ファイルが存在しません");
+		if (!fileReadmtd(args[0],"commodity.lst", "^[0-9 A-Z]{8}$", "商品", menumap,menuTotalmap)) {
+		} else {
+			System.out.println("予期せぬエラーが発生しました");
 			return;
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			System.out.println("商品定義ファイルが見つかりません");
-			return;
-		} finally {
-			if (br1 != null)
-				try {
-					br1.close();
-				} catch (IOException e) {
-					System.out.println("予期せぬエラーが発生しました");
-					return;
-				}
 		}
 
 		//店舗別集計
@@ -251,10 +177,24 @@ class EarningsAggregate {
 				}
 		}
 
-		//shopTotalmapのvalueを降順に
+
+		//店舗別集計出力
+
+		fileWritemtd(args[0], "branch.out", shopTotalmap, shopmap);
+
+		//商品別集計出力
+
+		fileWritemtd(args[0], "commodity.out", menuTotalmap, menumap);
+	}
+
+
+
+	//ファイル出力メソッド
+
+	public static boolean fileWritemtd(String dir, String fileName, HashMap<String,Long> totalMap, HashMap<String ,String> nameMap) {
 
 		List<Entry<String, Long>>
-		list_entries = new ArrayList<Entry<String, Long>>(shopTotalmap.entrySet());
+		list_entries = new ArrayList<Entry<String, Long>>(totalMap.entrySet());
 		Collections.sort(list_entries, new Comparator<Entry<String, Long>>()
 		{
 			public int compare(Entry<String, Long> obj1, Entry<String, Long> obj2)
@@ -262,86 +202,90 @@ class EarningsAggregate {
 				return obj2.getValue().compareTo(obj1.getValue());
 			}
 		});
-		for (Entry<String, Long> entry : list_entries) {
-		}
-
-		//店舗別集計出力
 
 		BufferedWriter bw3 = null;
 		try {
-			File file = new File(args[0],"branch.out");
+			File file = new File(dir,"fileNamet");
 			FileWriter fw = new FileWriter(file);
 			bw3 = new BufferedWriter(fw);
 
 			for (Entry<String, Long> entry : list_entries) {
-				bw3.write(entry.getKey() + " , " + shopmap.get(entry.getKey()) + " , " + entry.getValue());
+				bw3.write(entry.getKey() + " , " + nameMap.get(entry.getKey()) + " , " + entry.getValue());
 				bw3.newLine();
 			}
 		} catch (FileNotFoundException e){
 			System.out.println("予期せぬエラーが発生しました");
-			return;
+			return false;
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
 			System.out.println("予期せぬエラーが発生しました");
-			return;
+			return false;
 		} finally {
 			if (bw3 != null)
 				try {
 					bw3.close();
 				} catch (IOException e) {
 					System.out.print("予期せぬエラーが発生しました");
-					return;
+					return false;
 				}
 		}
 
-		//menuTotalmapのvalueを降順に
+		return true;
 
-		List<Entry<String, Long>>
-		list_entries2 = new ArrayList<Entry<String, Long>>(menuTotalmap.entrySet());
-		Collections.sort(list_entries2, new Comparator<Entry<String, Long>>()
-		{
-			public int compare(Entry<String, Long> obj1, Entry<String, Long> obj2)
-			{
-				return obj2.getValue().compareTo(obj1.getValue());
-			}
-		});
-		for (Entry<String, Long> entry : list_entries2) {
-		}
+	}
 
-		//商品別集計出力
+	public static boolean fileReadmtd(String dir, String fileName, String matchNumber, String printName,
+			HashMap<String ,String>mapName, HashMap<String,Long> totalMapname) {
 
-		BufferedWriter bw6 = null;
+
+		BufferedReader br = null;
+
 		try {
-			File file = new File(args[0],"commodity.out");
-			FileWriter fw = new FileWriter(file);
-			bw6 = new BufferedWriter(fw);
 
-			for (Entry<String, Long> entry : list_entries2) {
-				bw6.write(entry.getKey() + " , " + menumap.get(entry.getKey()) + " , " + entry.getValue());
-				bw6.newLine();
+			//			public static boolean (String a,) {
+			//				int brunch = a
+
+			File file = new File(dir,fileName);
+			FileReader fr = new FileReader(file);
+			br = new BufferedReader(fr);
+			String line = null;
+
+			//ファイルの中身を書き出し、,で区切り それぞれにitems[]として保持させる
+
+			while ((line = br.readLine()) != null) {
+				String str = line;
+				String[] items = str.split(",");
+
+
+				//ファイルフォーマットの指定
+
+				if (items[0].matches(matchNumber) && items.length == 2)  {
+					mapName.put (items[0],items[1]);
+					totalMapname.put (items[0],(long) 0);
+				} else {
+					System.out.println("printName定義ファイルのフォーマットが不正です");
+					return false;
+				}
 			}
+		} catch (FileNotFoundException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+			System.out.println("printName定義ファイルが存在しません");
+			return false;
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
-			System.out.println("予期せぬエラーが発生しました");
-			return;
+			System.out.println("printName支店定義ファイルが存在しません");
+			return false;
 		} finally {
-			if (bw6 != null)
+			if (br != null)
 				try {
-					bw6.close();
+					br.close();
 				} catch (IOException e) {
 					System.out.println("予期せぬエラーが発生しました");
-					return;
+					return false;
 				}
 		}
-	}
-
-	private static void fileReadmtd() {
-		// TODO 自動生成されたメソッド・スタブ
-
-	}
-
-	private static void printThreeValues() {
-		// TODO 自動生成されたメソッド・スタブ
-
+		return true;
 	}
 }
+

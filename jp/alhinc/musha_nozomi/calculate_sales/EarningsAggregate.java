@@ -147,7 +147,6 @@ class EarningsAggregate {
 			}
 
 		} catch (FileNotFoundException e) {
-
 			// TODO 自動生成された catch ブロック;
 			System.out.println("予期せぬエラーが発生しました");
 			return;
@@ -155,10 +154,12 @@ class EarningsAggregate {
 			// TODO 自動生成された catch ブロック
 			System.out.println("予期せぬエラーが発生しました");
 			return;
+
 		} finally {
-			if (br4 != null)
 				try {
-					br4.close();
+					if (br4 != null){
+						br4.close();
+					}
 				} catch (IOException e) {
 					System.out.println("予期せぬエラーが発生しました");
 					return;
@@ -202,9 +203,10 @@ class EarningsAggregate {
 			bw3 = new BufferedWriter(fw);
 
 			for (Entry<String, Long> entry : list_entries) {
-				bw3.write(entry.getKey() + " , " + nameMap.get(entry.getKey()) + " , " + entry.getValue());
+				bw3.write(entry.getKey() + "," + nameMap.get(entry.getKey()) + "," + entry.getValue());
 				bw3.newLine();
 			}
+
 		} catch (FileNotFoundException e){
 			System.out.println("予期せぬエラーが発生しました");
 			return false;
@@ -212,6 +214,7 @@ class EarningsAggregate {
 			// TODO 自動生成された catch ブロック
 			System.out.println("予期せぬエラーが発生しました");
 			return false;
+
 		} finally {
 			try {
 				bw3.close();
@@ -230,10 +233,6 @@ class EarningsAggregate {
 		BufferedReader br = null;
 
 		try {
-
-			//			public static boolean (String a,) {
-			//				int brunch = a
-
 			File file = new File(dir,fileName);
 			FileReader fr = new FileReader(file);
 			br = new BufferedReader(fr);
@@ -245,7 +244,6 @@ class EarningsAggregate {
 				String str = line;
 				String[] items = str.split(",");
 
-
 				//ファイルフォーマットの指定
 
 				if (items[0].matches(matchNumber) && items.length == 2)  {
@@ -256,6 +254,7 @@ class EarningsAggregate {
 					return false;
 				}
 			}
+
 		} catch (FileNotFoundException e) {
 			// TODO 自動生成された catch ブロック
 			System.out.println(printName + "定義ファイルが存在しません");
@@ -264,6 +263,7 @@ class EarningsAggregate {
 			// TODO 自動生成された catch ブロック
 			System.out.println(printName + "支店定義ファイルが存在しません");
 			return false;
+
 		} finally {
 			if (br != null)
 				try {
@@ -276,4 +276,3 @@ class EarningsAggregate {
 		return true;
 	}
 }
-

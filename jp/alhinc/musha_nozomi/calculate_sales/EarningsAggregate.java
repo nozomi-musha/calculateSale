@@ -150,6 +150,7 @@ class EarningsAggregate {
 			// TODO 自動生成された catch ブロック;
 			System.out.println("予期せぬエラーが発生しました");
 			return;
+
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
 			System.out.println("予期せぬエラーが発生しました");
@@ -190,6 +191,8 @@ class EarningsAggregate {
 		list_entries = new ArrayList<Entry<String, Long>>(totalMap.entrySet());
 		Collections.sort(list_entries, new Comparator<Entry<String, Long>>()
 		{
+
+
 			public int compare(Entry<String, Long> obj1, Entry<String, Long> obj2)
 			{
 				return obj2.getValue().compareTo(obj1.getValue());
@@ -210,6 +213,7 @@ class EarningsAggregate {
 		} catch (FileNotFoundException e){
 			System.out.println("予期せぬエラーが発生しました");
 			return false;
+
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
 			System.out.println("予期せぬエラーが発生しました");
@@ -223,8 +227,11 @@ class EarningsAggregate {
 				return false;
 			}
 		}
+
 		return true;
 	}
+
+
 
 	public static boolean fileReadmtd(String dir, String fileName, String matchNumber, String printName,
 			HashMap<String ,String>mapName, HashMap<String,Long> totalMapname) {
@@ -259,20 +266,23 @@ class EarningsAggregate {
 			// TODO 自動生成された catch ブロック
 			System.out.println(printName + "定義ファイルが存在しません");
 			return false;
+
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
 			System.out.println(printName + "支店定義ファイルが存在しません");
 			return false;
 
 		} finally {
-			if (br != null)
 				try {
+					if (br != null) {
 					br.close();
+					}
 				} catch (IOException e) {
 					System.out.println("予期せぬエラーが発生しました");
 					return false;
 				}
 		}
+
 		return true;
 	}
 }

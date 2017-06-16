@@ -184,7 +184,6 @@ class EarningsAggregate {
 		//店舗別集計出力
 
 		if(!fileWritemtd(args[0], "branch.out", shopTotalmap, shopmap)) {
-			System.out.println("予期せぬエラーが発生しました");
 			return;
 		}
 
@@ -192,7 +191,6 @@ class EarningsAggregate {
 		//商品別集計出力
 
 		if(!fileWritemtd(args[0], "commodity.out", menuTotalmap, menumap)) {
-			System.out.println("予期せぬエラーが発生しました");
 			return;
 		}
 	}
@@ -241,7 +239,7 @@ class EarningsAggregate {
 
 		} finally {
 			try {
-				if (bw3 != null) {
+				if(bw3 != null){
 					bw3.close();
 				}
 			} catch (IOException e) {
